@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # [Argon Dashboard 2 PRO MUI](http://demos.creative-tim.com/argon-dashboard-pro-material-ui/#/dashboards/default?ref=readme-adpmui) [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?url=https://www.creative-tim.com/product/argon-dashboard-pro-material-ui&text=Check%20Argon%20Dashboard%20Pro%React%20made%20by%20@CreativeTim%20#webdesign%20#dashboard%20#argondesign%20#react%20https://www.creative-tim.com/product/argon-dashboard-pro-material-ui)
 
 ![version](https://img.shields.io/badge/version-3.0.0-blue.svg) [![GitHub issues open](https://img.shields.io/github/issues/creativetimofficial/ct-argon-dashboard-pro-material-ui.svg)](https://github.com/creativetimofficial/ct-argon-dashboard-pro-material-ui/issues?q=is%3Aopen+is%3Aissue) [![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/creativetimofficial/ct-argon-dashboard-pro-material-ui.svg)](https://github.com/creativetimofficial/ct-argon-dashboard-pro-material-ui/issues?q=is%3Aissue+is%3Aclosed)
@@ -275,3 +276,6 @@ Dribbble: <https://dribbble.com/creativetim>
 Google+: <https://plus.google.com/+CreativetimPage>
 
 Instagram: <https://instagram.com/creativetimofficial>
+=======
+
+>>>>>>> 8f80a39013c03a1b4f1d7251a157433318d48c41
