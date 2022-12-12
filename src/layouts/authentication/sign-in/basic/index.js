@@ -42,8 +42,8 @@ function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
-  const [portalUsername, setPortalUsername] = useState("craig@pubnub.com");
-  const [portalPassword, setPortalPassword] = useState("!Cleo2Maui!");
+  const [portalUsername, setPortalUsername] = useState("redacted");
+  const [portalPassword, setPortalPassword] = useState("recacted");
   const [portalUserId, setPortalUserId] = useState();
   const [portalToken, setPortalToken] = useState();
   const [portalAccountId, setPortalAccountId] = useState();
