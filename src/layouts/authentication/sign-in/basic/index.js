@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import { useState } from "react";
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -35,21 +35,21 @@ import Separator from "layouts/authentication/components/Separator";
 // Images
 import github from "assets/images/logos/github.svg";
 import google from "assets/images/logos/google.svg";
+
+import { usePnAccountData } from "PnAccountProvider";
+
+
 const bgImage =
   "https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-basic.jpg";
 
 function Basic() {
+  const pnAccountContext = usePnAccountData();
+  const navigate = useNavigate();
   const [rememberMe, setRememberMe] = useState(false);
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
-  const [portalUsername, setPortalUsername] = useState("craig@pubnub.com");
-  const [portalPassword, setPortalPassword] = useState("!Cleo2Maui!");
-  const [portalUserId, setPortalUserId] = useState();
-  const [portalToken, setPortalToken] = useState();
-  const [portalAccountId, setPortalAccountId] = useState();
-  const [portalAccounts, setPortalAccounts] = useState([]);
-  // const [portalApps, setPortalApps] = useState([]);
-  // const [portalKeys, setPortalKeys] = useState([]);
+  pnAccountContext.setPortalUsername("craig@pubnub.com");
+  const [portalPassword, setPortalPassword] = useState("!Maui2Kona!");
 
   const timerAlert = () => {
     return;
@@ -66,22 +66,23 @@ function Basic() {
     const timeoutId = setTimeout(() => controller.abort(), 5000);
     timerAlert("PN Dashboard Login", "Please wait, while we authenticate...", 5000);
 
-    let uri = `/login?username=${portalUsername}&password=${portalPassword}`;
-    // let uri = `https:/localhost:5000/login?username=${portalUsername}&password=${portalPassword}`;
+    let uri = `/login?username=${pnAccountContext.portalUsername}&password=${portalPassword}`;
     console.log(`uri: ${uri}`);
 
     fetch(uri, { signal: controller.signal }).then(res => res.json()).then(
-    // fetch(uri).then(res => res.json()).then(
         (result) => {
             console.log("result", result);
 
-            setPortalToken(result.session.token);
-            setPortalUserId(result.session.userid);
-            setPortalAccountId(result.session.accountid);
-            setPortalAccounts(result.accounts);
+            pnAccountContext.setPortalToken(result.session.token);
+            pnAccountContext.setPortalUserId(result.session.userid);
+            pnAccountContext.setPortalAccountId(result.session.accountid);
+            pnAccountContext.setPortalAccounts(result.accounts);
 
             clearTimeout(timeoutId);
             hideAlert();
+
+            // nav to the account list page
+            navigate('/dashboards/pn-cost-dashboard');
         },
         (error) => {
             hideAlert();
@@ -126,12 +127,12 @@ function Basic() {
           <ArgonBox component="form" role="form">
             <ArgonBox mb={2}>
               <ArgonInput type="email" placeholder="Email" 
-                onChange={setPortalUsername}
+                onChange={pnAccountContext.setPortalUsername}
               />
             </ArgonBox>
             <ArgonBox mb={2}>
               <ArgonInput type="password" placeholder="Password" 
-                onChange={setPortalPassword}
+                onChange={pnAccountContext.setPortalPassword}
               />
             </ArgonBox>
             <ArgonBox display="flex" alignItems="center">
