@@ -55,6 +55,8 @@ import brandDark from "assets/images/logo-ct-dark.png";
 import "assets/css/nucleo-icons.css";
 import "assets/css/nucleo-svg.css";
 
+import { PnAccountProvider } from "PnAccountProvider";
+
 export default function App() {
   const [controller, dispatch] = useArgonController();
   const { miniSidenav, direction, layout, openConfigurator, sidenavColor, darkSidenav, darkMode } =
@@ -149,7 +151,7 @@ export default function App() {
             <Sidenav
               color={sidenavColor}
               brand={darkSidenav || darkMode ? brand : brandDark}
-              brandName="Argon Dashboard 2 PRO"
+              brandName="PubNub Cost Analysis"
               routes={routes}
               onMouseEnter={handleOnMouseEnter}
               onMouseLeave={handleOnMouseLeave}
@@ -166,29 +168,31 @@ export default function App() {
       </ThemeProvider>
     </CacheProvider>
   ) : (
-    <ThemeProvider theme={darkMode ? themeDark : theme}>
-      <CssBaseline />
-      {layout === "dashboard" && (
-        <>
-          <Sidenav
-            color={sidenavColor}
-            brand={darkSidenav || darkMode ? brand : brandDark}
-            brandName="Argon Dashboard 2 PRO"
-            routes={routes}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
-          />
-          <Configurator />
-          {configsButton}
-        </>
-      )}
-      {layout === "vr" && <Configurator />}
-      <Routes>
-        {getRoutes(routes)}
-        {/* <Route path="*" element={<Navigate to="/dashboards/landing" />} /> */}
-        {/* cvc: change default route to login page */}
-        <Route path="*" element={<Navigate to="/authentication/sign-in/basic" />} />
-      </Routes>
-    </ThemeProvider>
+    <PnAccountProvider>
+      <ThemeProvider theme={darkMode ? themeDark : theme}>
+        <CssBaseline />
+        {layout === "dashboard" && (
+          <>
+            <Sidenav
+              color={sidenavColor}
+              brand={darkSidenav || darkMode ? brand : brandDark}
+              brandName="PubNub Cost Analysis"
+              routes={routes}
+              onMouseEnter={handleOnMouseEnter}
+              onMouseLeave={handleOnMouseLeave}
+            />
+            <Configurator />
+            {configsButton}
+          </>
+        )}
+        {layout === "vr" && <Configurator />}
+        <Routes>
+          {getRoutes(routes)}
+          {/* <Route path="*" element={<Navigate to="/dashboards/landing" />} /> */}
+          {/* cvc: change default route to login page */}
+          <Route path="*" element={<Navigate to="/authentication/sign-in/basic" />} />
+        </Routes>
+      </ThemeProvider>
+    </PnAccountProvider>
   );
 }
