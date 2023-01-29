@@ -96,6 +96,10 @@ function DashboardNavbar({ absolute, light, isMini }) {
     return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
 
+  useEffect(() => {
+    updateCosts();
+  }, [pnAccountContext.usage])
+
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
@@ -190,7 +194,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
     console.log("handleSelectKey: ", e);
     pnAccountContext.setPortalKeyId(e.value);
     fetchKeyUsage(e.value);
-    updateCosts();
   };
 
   const fetchKeyUsage = (keyId) => {
@@ -205,7 +208,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
     fetch(uri, {signal: controller.signal}).then(res => res.json()).then((result) => {
         console.log("key usage results", result);
         pnAccountContext.setUsage(result);
-
+        
         clearTimeout(timeoutId);
         hideAlert();
       },

@@ -48,8 +48,18 @@ function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
-  pnAccountContext.setPortalUsername("craig@pubnub.com");
-  const [portalPassword, setPortalPassword] = useState("!Maui2Kona!");
+  const [portalUsername, setPortalUsername] = useState();
+  const [portalPassword, setPortalPassword] = useState();
+
+  const handleEmail = (e) => {
+    console.log("handleEmail: ", e);
+    setPortalUsername(e.value);
+  };
+
+  const handlePassword = (e) => {
+    console.log("handlePassword: ", e);
+    setPortalPassword(e.value);
+  };
 
   const timerAlert = () => {
     return;
@@ -59,14 +69,12 @@ function Basic() {
     return;
   }
 
-
   const signIn = () => {
     console.log("signIn");
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
     timerAlert("PN Dashboard Login", "Please wait, while we authenticate...", 5000);
-
-    let uri = `/login?username=${pnAccountContext.portalUsername}&password=${portalPassword}`;
+    let uri = `/login?username=${portalUsername}&password=${portalPassword}`;
     console.log(`uri: ${uri}`);
 
     fetch(uri, { signal: controller.signal }).then(res => res.json()).then(
@@ -127,12 +135,14 @@ function Basic() {
           <ArgonBox component="form" role="form">
             <ArgonBox mb={2}>
               <ArgonInput type="email" placeholder="Email" 
-                onChange={pnAccountContext.setPortalUsername}
+                onChange={(e) => setPortalUsername(e.target.value)}
+                // onChange={handleEmail(e)}
               />
             </ArgonBox>
             <ArgonBox mb={2}>
               <ArgonInput type="password" placeholder="Password" 
-                onChange={pnAccountContext.setPortalPassword}
+                onChange={(e) => setPortalPassword(e.target.value)}
+                // onChange={setPortalPassword}
               />
             </ArgonBox>
             <ArgonBox display="flex" alignItems="center">
