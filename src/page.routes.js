@@ -209,7 +209,7 @@ const pageRoutes = [
         collapse: [
           {
             name: "basic",
-            route: "/authentication/sign-in/basic",
+            route: "/pn-metrics/sign-in/basic",
           },
           {
             name: "cover",

@@ -89,8 +89,7 @@ function Basic() {
             clearTimeout(timeoutId);
             hideAlert();
 
-            // nav to the account list page
-            navigate('/dashboards/pn-cost-dashboard');
+            navigate('/pn-metrics/pn-cost-dashboard');
         },
         (error) => {
             hideAlert();

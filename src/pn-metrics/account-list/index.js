@@ -15,6 +15,7 @@ Coded by www.creative-tim.com
 
 // react-router-dom components
 import { Link, useNavigate, route } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -26,25 +27,32 @@ import ArgonTypography from "components/ArgonTypography";
 import ArgonButton from "components/ArgonButton";
 
 // Argon Dashboard 2 PRO MUI example components
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
-import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
 
 // Data
 import dataTableData from "./data/dataTableData";
+import appsTableData from "./data/appsTableData";
+import keysTableData from "./data/keysTableData";
 import { usePnAccountData } from "PnAccountProvider";
 
 function AccountList() {
   const pnAccountContext = usePnAccountData();
   console.log('pnAccountContext', pnAccountContext);
 
+  useEffect(() => {
+  }, [pnAccountContext.portalAccounts])
+
+  useEffect(() => {
+  }, [pnAccountContext.portalApps])
+
+  useEffect(() => {
+  }, [pnAccountContext.portalKeys])
+
   const navigate = useNavigate();
 
   return (
-    <DashboardLayout>
-      <DashboardNavbar />
-      <ArgonBox my={3}>
+    <>
+      <ArgonBox>
         <Card>
           <ArgonBox display="flex" justifyContent="space-between" alignItems="flex-start" p={3}>
             <ArgonBox lineHeight={1}>
@@ -72,15 +80,58 @@ function AccountList() {
           <DataTable
             table={dataTableData(pnAccountContext.portalAccounts)}
             entriesPerPage={{
-              defaultValue: 7,
-              entries: [5, 7, 10, 15, 20, 25],
+              defaultValue: 5,
+              entries: [1, 5, 10, 20, 50],
             }}
             canSearch
           />
         </Card>
       </ArgonBox>
-      <Footer />
-    </DashboardLayout>
+
+      <ArgonBox my={3}>
+        <Card>
+          <ArgonBox display="flex" justifyContent="space-between" alignItems="flex-start" p={3}>
+            <ArgonBox lineHeight={1}>
+              <ArgonTypography variant="h5" fontWeight="medium">
+                Apps
+              </ArgonTypography>
+            </ArgonBox>
+            <Stack spacing={1} direction="row">
+            </Stack>
+          </ArgonBox>
+          <DataTable
+            table={appsTableData(pnAccountContext.portalApps)}
+            entriesPerPage={{
+              defaultValue: 5,
+              entries: [1, 5, 10, 20, 50],
+            }}
+            canSearch
+          />
+        </Card>
+      </ArgonBox>
+      
+      <ArgonBox my={3}>
+        <Card>
+          <ArgonBox display="flex" justifyContent="space-between" alignItems="flex-start" p={3}>
+            <ArgonBox lineHeight={1}>
+              <ArgonTypography variant="h5" fontWeight="medium">
+                Key Sets
+              </ArgonTypography>
+            </ArgonBox>
+            <Stack spacing={1} direction="row">
+            </Stack>
+          </ArgonBox>
+          <DataTable
+            table={keysTableData(pnAccountContext.portalKeys)}
+            entriesPerPage={{
+              defaultValue: 5,
+              entries: [1, 5, 10, 20, 50],
+            }}
+            canSearch
+          />
+        </Card>
+      </ArgonBox>
+    </>
   );
 }
 

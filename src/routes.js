@@ -71,7 +71,7 @@ import NewProduct from "layouts/ecommerce/products/new-product";
 import EditProduct from "layouts/ecommerce/products/edit-product";
 import ProductPage from "layouts/ecommerce/products/product-page";
 import ProductsList from "layouts/ecommerce/products/products-list";
-import AccountList from "layouts/account-list";
+import AccountList from "pn-metrics/account-list";
 import OrderList from "layouts/ecommerce/orders/order-list";
 import OrderDetails from "layouts/ecommerce/orders/order-details";
 import Referral from "layouts/ecommerce/referral";
@@ -95,7 +95,7 @@ import Error500 from "layouts/authentication/error/500";
 
 // Argon Dashboard 2 PRO MUI components
 import ArgonBox from "components/ArgonBox";
-import PnCostDashboard from "layouts/dashboards/pn-cost-dashboard";
+import PnCostDashboard from "pn-metrics/pn-cost-dashboard";
 
 const routes = [
   {
@@ -107,15 +107,9 @@ const routes = [
       {
         name: "Cost Analysis Dashboard",
         key: "pn-cost-dashboard",
-        route: "/dashboards/pn-cost-dashboard",
+        route: "/pn-metrics/pn-cost-dashboard",
         component: <PnCostDashboard />,
         noCollapse: true,
-      },
-      {
-        name: "Account List",
-        key: "account-list",
-        route: "/pnaccount/account/account-list",
-        component: <AccountList />,
       },
     ]
   },  

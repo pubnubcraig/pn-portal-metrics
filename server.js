@@ -45,7 +45,7 @@ app.get('/app-usage', (req, res) => {
   // --header 'X-Session-Token: <session_token>'
 
   const options = {
-    'url': `https://admin.pubnub.com/api/v4/services/usage/legacy/usage?app_id=${req.query.appid}&usageType=%{usage_type}&file_format=json&start=${start_data}&end=${end_date}`,
+    'url': `https://admin.pubnub.com/api/v4/services/usage/legacy/usage?app_id=${req.query.appid}&usageType=transaction&file_format=json&start=${start_data}&end=${end_date}`,
     'headers': { 'X-Session-Token': req.query.token }
   };
 

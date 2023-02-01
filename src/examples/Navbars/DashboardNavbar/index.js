@@ -56,10 +56,6 @@ import {
   setOpenConfigurator,
 } from "context";
 
-// Images
-// import team2 from "assets/images/team-2.jpg";
-// import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
-
 import { usePnAccountData } from "PnAccountProvider";
 
 function DashboardNavbar({ absolute, light, isMini }) {
@@ -97,164 +93,13 @@ function DashboardNavbar({ absolute, light, isMini }) {
   }, [dispatch, fixedNavbar]);
 
   useEffect(() => {
-    updateCosts();
+    pnAccountContext.updateCosts();
   }, [pnAccountContext.usage])
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
-
-  const timerAlert = () => {
-    return;
-  }
-
-  const hideAlert = () => {
-    return;
-  }
-
-  const handleSelectAccount = (e) => {
-    console.log("handleSelectAccount: ", e);
-    pnAccountContext.setPortalAccountId(e.value);
-
-    // clear Apps list
-    pnAccountContext.setPortalApps([]);
-    pnAccountContext.setPortalKeys([]);
-    
-    fetchApps(e.value);
-  };
-
-  const fetchApps = (acctId) => {
-    console.log("fetchApps");
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
-    timerAlert("Fetching your apps", "Please wait, while we fetch your apps...", 5000);
-
-    let uri = `/apps?ownerid=${acctId}&token=${pnAccountContext.portalToken}`;
-    console.log(`uri: ${uri}`);
-
-    fetch(uri, {signal: controller.signal}).then(res => res.json()).then((result) => {
-        console.log("result", result);
-        pnAccountContext.setPortalApps(result.result);
-
-        clearTimeout(timeoutId);
-        hideAlert();
-      },
-      (error) => {
-          hideAlert();
-          console.log("Fetch apps error:", error);
-          timerAlert("Fetch apps error", error + " (VPN enabled?)", 5000);
-      }
-    ).catch = (error) => {
-      hideAlert();
-      console.log("Fetch apps error:", error);
-      timerAlert("fetch /apps", error, 5000);
-    };
-  }
-
-  const handleSelectApp = (e) => {
-    console.log("handleSelectApp: ", e);
-    pnAccountContext.setPortalAppId(e.value);
-
-    // clear Apps list
-    pnAccountContext.setPortalKeys([]);
-
-    fetchKeys(e.value);
-  };
-
-  const fetchKeys = (appId) => {
-    console.log("fetchKeys");
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
-    timerAlert("Fetching your keys", "Please wait, while we fetch your keys...", 5000);
-
-    let uri = `/keys?appid=${appId}&token=${pnAccountContext.portalToken}`;
-    console.log(`uri: ${uri}`);
-
-    fetch(uri, {signal: controller.signal}).then(res => res.json()).then((result) => {
-        console.log("result", result);
-        pnAccountContext.setPortalKeys(result);
-
-        clearTimeout(timeoutId);
-        hideAlert();
-      },
-      (error) => {
-          hideAlert();
-          console.log("Fetch keys error:", error);
-          timerAlert("Fetch keys error", error + " (VPN enabled?)", 5000);
-      }
-    ).catch = (error) => {
-      hideAlert();
-      console.log("Fetch keys error:", error);
-      timerAlert("fetch /keys", error, 5000);
-    };
-  }
-
-  const handleSelectKey = (e) => {
-    console.log("handleSelectKey: ", e);
-    pnAccountContext.setPortalKeyId(e.value);
-    fetchKeyUsage(e.value);
-  };
-
-  const fetchKeyUsage = (keyId) => {
-    console.log("fetchKeyUsage");
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
-    timerAlert("Fetching your keys", "Please wait, while we fetch your keys...", 5000);
-
-    let uri = `/key-usage?keyid=${keyId}&token=${pnAccountContext.portalToken}`;
-    console.log(`uri: ${uri}`);
-
-    fetch(uri, {signal: controller.signal}).then(res => res.json()).then((result) => {
-        console.log("key usage results", result);
-        pnAccountContext.setUsage(result);
-        
-        clearTimeout(timeoutId);
-        hideAlert();
-      },
-      (error) => {
-          hideAlert();
-          console.log("Fetch keys error:", error);
-          timerAlert("Fetch keys error", error + " (VPN enabled?)", 5000);
-      }
-    ).catch = (error) => {
-      hideAlert();
-      console.log("Fetch keys error:", error);
-      timerAlert("fetch /keys", error, 5000);
-    };
-  }
-
-  const updateCosts = () => {
-    const usage = pnAccountContext.usage;
-    const totSum = usage.replicated[Object.keys(usage.transactions_total)[0]].sum;
-    const repSum = usage.replicated[Object.keys(usage.replicated)[0]].sum;
-    const edgSum = usage.edge[Object.keys(usage.edge)[0]].sum;
-    // const funSum = usage.edge[Object.keys(usage.functions)[0]].sum;
-    const sigSum = usage.edge[Object.keys(usage.signals)[0]].sum;
-
-    const repCost = repSum * pnAccountContext.rateRep;
-    const edgCost = edgSum * pnAccountContext.rateEdg;
-    // const funCost = funSum * pnAccountContext.rateFun;
-    const sigCost = sigSum * pnAccountContext.rateSig;
-    const totCost = repCost + edgCost + sigCost;
-    // const totCost = repCost + edgCost + funCost + sigCost + totCost;
-
-    pnAccountContext.setCostRep(repCost.toLocaleString(
-      undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-
-    pnAccountContext.setCostEdg(edgCost.toLocaleString(
-      undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));  
-
-    // pnAccountContext.setCostFun(funCost.toLocaleString(
-    //   undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-
-    pnAccountContext.setCostSig(sigCost.toLocaleString(
-      undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));  
-
-    pnAccountContext.setCostTot(totCost.toLocaleString(
-      undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-  
-  }
 
   // Render the notifications menu
   const renderMenu = () => (
@@ -351,7 +196,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
           mb={{ xs: 1, md: 0 }}
           sx={(theme) => navbarRow(theme, { isMini })}
         >
-          <AccountsDropdown
+          {/* <AccountsDropdown
             options={pnAccountContext.portalAccounts} 
             handleSelectAccount={handleSelectAccount}
           />
@@ -359,10 +204,10 @@ function DashboardNavbar({ absolute, light, isMini }) {
             options={pnAccountContext.portalApps} 
             handleSelectApp={handleSelectApp}
           />
-          <KeysDropdown
+          <KeysDropdown 
             options={pnAccountContext.portalKeys} 
             handleSelectKey={handleSelectKey}
-          />
+          /> */}
         </ArgonBox>
       </Toolbar>
     </AppBar>
@@ -386,54 +231,54 @@ DashboardNavbar.propTypes = {
 
 export default DashboardNavbar;
 
-const AccountsDropdown = ({options, handleSelectAccount}) => {
-  console.log("AccountsDropdown: accounts", options);
-  console.log("Array.isArray", Array.isArray(options));
+// const AccountsDropdown = ({options, handleSelectAccount}) => {
+//   console.log("AccountsDropdown: accounts", options);
+//   console.log("Array.isArray", Array.isArray(options));
 
-  if (options == null || options.length ===0) return <><h2>No Options</h2></>;
+//   if (options == null || options.length ===0) return <><h2>No Options</h2></>;
 
-  return (
-    <>
-      <ArgonSelect
-        defaultValue={{ value: options[0].id, label: options[0].email }}
-        options={options.map((entry) => ({ value: entry.id, label: entry.email }))}
-        onChange={(e) => handleSelectAccount(e)}
-        size="small"
-      />
-    </>
-  );
-}
+//   return (
+//     <>
+//       <ArgonSelect
+//         defaultValue={{ value: options[0].id, label: options[0].email }}
+//         options={options.map((entry) => ({ value: entry.id, label: entry.email }))}
+//         onChange={(e) => handleSelectAccount(e)}
+//         size="small"
+//       />
+//     </>
+//   );
+// }
 
-const AppsDropdown = ({options, handleSelectApp}) => {
-  console.log("AppsDropdown: apps", options);
+// const AppsDropdown = ({options, handleSelectApp}) => {
+//   console.log("AppsDropdown: apps", options);
 
-  if (options == null || options.length ===0) return <><h2>No Options</h2></>;
+//   if (options == null || options.length ===0) return <><h2>No Options</h2></>;
 
-  return (
-    <>
-      <ArgonSelect
-        // defaultValue={{ value: "craig@pubnub.com", label: "craig@pubnub.com" }}
-        options={options.map((entry) => ({ value: entry.id, label: entry.name }))}
-        onChange={(e) => handleSelectApp(e)}
-        size="small"
-      />
-    </>
-  );
-}
+//   return (
+//     <>
+//       <ArgonSelect
+//         // defaultValue={{ value: "craig@pubnub.com", label: "craig@pubnub.com" }}
+//         options={options.map((entry) => ({ value: entry.id, label: entry.name }))}
+//         onChange={(e) => handleSelectApp(e)}
+//         size="small"
+//       />
+//     </>
+//   );
+// }
 
-const KeysDropdown = ({options, handleSelectKey}) => {
-  console.log("KeysDropdown: keys", options);
+// const KeysDropdown = ({options, handleSelectKey}) => {
+//   console.log("KeysDropdown: keys", options);
 
-  if (options == null || options.length ===0) return <><h2>No Options</h2></>;
+//   if (options == null || options.length === 0) return <><h2>No Options</h2></>;
 
-  return (
-    <>
-      <ArgonSelect
-        // defaultValue={{ value: "craig@pubnub.com", label: "craig@pubnub.com" }}
-        options={options.map((entry) => ({ value: entry.id, label: entry.properties.name + ": " + entry.subscribe_key }))}
-        onChange={(e) => handleSelectKey(e)}
-        size="small"
-      />
-    </>
-  );
-}
+//   return (
+//     <>
+//       <ArgonSelect
+//         // defaultValue={{ value: "craig@pubnub.com", label: "craig@pubnub.com" }}
+//         options={options.map((entry) => ({ value: entry.id, label: entry.properties.name + ": " + entry.subscribe_key }))}
+//         onChange={(e) => handleSelectKey(e)}
+//         size="small"
+//       />
+//     </>
+//   );
+// }

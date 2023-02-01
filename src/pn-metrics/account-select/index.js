@@ -70,7 +70,7 @@ function PnCostDashboard() {
               title="Total"
               count={pnAccountContext.costTot}
               icon={{ color: "info", component: <i className="ni ni-money-coins" /> }}
-              percentage={{ color: "success", count: "+55%", text: "since yesterday" }}
+              percentage={{ color: "success", count: pnAccountContext.txTot, text: "" }}
             />
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
@@ -78,7 +78,7 @@ function PnCostDashboard() {
               title="Replicated"
               count={pnAccountContext.costRep}
               icon={{ color: "error", component: <i className="ni ni-world" /> }}
-              percentage={{ color: "success", count: "+3%", text: "since last week" }}
+              percentage={{ color: "success", count: pnAccountContext.txRep, text: "" }}
             />
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
@@ -86,7 +86,7 @@ function PnCostDashboard() {
               title="Edge"
               count={pnAccountContext.costEdg}
               icon={{ color: "success", component: <i className="ni ni-paper-diploma" /> }}
-              percentage={{ color: "error", count: "-2%", text: "since last quarter" }}
+              percentage={{ color: "error", count: pnAccountContext.txEdg, text: "" }}
             />
           </Grid>
           {/* <Grid item xs={12} md={6} lg={3}>
@@ -94,7 +94,7 @@ function PnCostDashboard() {
               title="Functions"
               count={pnAccountContext.costFun}
               icon={{ color: "warning", component: <i className="ni ni-cart" /> }}
-              percentage={{ color: "success", count: "+5%", text: "than last month" }}
+              percentage={{ color: "success", count: pnAccountContext.txFun, text: "" }}
             />
           </Grid> */}
           <Grid item xs={12} md={6} lg={3}>
@@ -102,7 +102,7 @@ function PnCostDashboard() {
               title="Signals"
               count={pnAccountContext.costSig}
               icon={{ color: "warning", component: <i className="ni ni-cart" /> }}
-              percentage={{ color: "success", count: "+5%", text: "than last month" }}
+              percentage={{ color: "success", count: pnAccountContext.txSig, text: "" }}
             />
           </Grid>
         </Grid>
