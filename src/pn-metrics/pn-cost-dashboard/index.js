@@ -64,57 +64,26 @@ function PnCostDashboard() {
   const pnAccountContext = usePnAccountData();
 
   useEffect(() => {
-    pnAccountContext.updateCosts();
-  }, [pnAccountContext.usage])
+
+  }, [pnAccountContext.portalAppId])
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <ArgonBox py={3}>
+      <ArgonBox py={3} my={12}>
+        <ArgonBox display="flex" alignItems="top" >
+          <Grid container item={12}>
+            <Grid item md={2}>
+              <BreakdownType pnAccountContext={pnAccountContext} />
+            </Grid>
+            <Grid item md={10} my={3}>
+              <SalesTable title="Sales by Country" rows={salesTableData} />
+            </Grid>
+          </Grid>
+        </ArgonBox>
+
+        {/* 
         <Grid container spacing={3} mb={3}>
-          <Grid item xs={12} md={6} lg={3}>
-            <DetailedStatisticsCard
-              title="Total"
-              count={pnAccountContext.costTot}
-              icon={{ color: "info", component: <i className="ni ni-money-coins" /> }}
-              percentage={{ color: "success", count: pnAccountContext.txTot, text: "" }}
-            />
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <DetailedStatisticsCard
-              title="Replicated"
-              count={pnAccountContext.costRep}
-              icon={{ color: "error", component: <i className="ni ni-world" /> }}
-              percentage={{ color: "success", count: pnAccountContext.txRep, text: "" }}
-            />
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <DetailedStatisticsCard
-              title="Edge"
-              count={pnAccountContext.costEdg}
-              icon={{ color: "success", component: <i className="ni ni-paper-diploma" /> }}
-              percentage={{ color: "error", count: pnAccountContext.txEdg, text: "" }}
-            />
-          </Grid>
-          {/* <Grid item xs={12} md={6} lg={3}>
-            <DetailedStatisticsCard
-              title="Functions"
-              count={pnAccountContext.costFun}
-              icon={{ color: "warning", component: <i className="ni ni-cart" /> }}
-              percentage={{ color: "success", count: pnAccountContext.txFun, text: "" }}
-            />
-          </Grid> */}
-          <Grid item xs={12} md={6} lg={3}>
-            <DetailedStatisticsCard
-              title="Signals"
-              count={pnAccountContext.costSig}
-              icon={{ color: "warning", component: <i className="ni ni-cart" /> }}
-              percentage={{ color: "success", count: pnAccountContext.txSig, text: "" }}
-            />
-          </Grid>
-        </Grid>
-        
-        {/* <Grid container spacing={3} mb={3}>
           <Grid item xs={12} lg={7}>
             <GradientLineChart
               title="PubNub Sales"
@@ -203,11 +172,77 @@ function PnCostDashboard() {
             <CategoriesList title="categories" categories={categoriesListData} />
           </Grid>
         </Grid> */}
+
+
+
+        <AccountList />
       </ArgonBox>
-      <AccountList />
       <Footer />
     </DashboardLayout>
   );
 }
 
 export default PnCostDashboard;
+
+const BreakdownType = ({ pnAccountContext }) => {
+  return (
+    <>
+      <ArgonBox my={3}>
+        <Grid item mr={2}>
+          <DetailedStatisticsCard
+            title="Total"
+            count={pnAccountContext.costTot}
+            icon={{ color: "info", component: <i className="ni ni-money-coins" /> }}
+            percentage={{ color: "success", count: pnAccountContext.txTot, text: "" }}
+          />
+        </Grid>
+      </ArgonBox>
+
+      <ArgonBox my={3}>
+        <Grid item mr={2}>
+          <DetailedStatisticsCard
+            title="Replicated"
+            count={pnAccountContext.costRep}
+            icon={{ color: "error", component: <i className="ni ni-world" /> }}
+            percentage={{ color: "success", count: pnAccountContext.txRep, text: "" }}
+          />
+        </Grid>
+      </ArgonBox>
+
+      <ArgonBox my={3}>
+        <Grid item mr={2}>
+          <DetailedStatisticsCard
+            title="Edge"
+            count={pnAccountContext.costEdg}
+            icon={{ color: "success", component: <i className="ni ni-paper-diploma" /> }}
+            percentage={{ color: "error", count: pnAccountContext.txEdg, text: "" }}
+          />
+        </Grid>
+      </ArgonBox>
+
+      {/* 
+          <ArgonBox my={3}>
+            <Grid item mr={2}>
+              <DetailedStatisticsCard
+                title="Functions"
+                count={pnAccountContext.costFun}
+                icon={{ color: "warning", component: <i className="ni ni-cart" /> }}
+                percentage={{ color: "success", count: pnAccountContext.txFun, text: "" }}
+              />
+            </Grid> 
+          </ArgonBox>
+          */}
+
+      <ArgonBox my={3}>
+        <Grid item mr={2}>
+          <DetailedStatisticsCard
+            title="Signals"
+            count={pnAccountContext.costSig}
+            icon={{ color: "warning", component: <i className="ni ni-cart" /> }}
+            percentage={{ color: "success", count: pnAccountContext.txSig, text: "" }}
+          />
+        </Grid>
+      </ArgonBox>
+    </>
+  );
+}

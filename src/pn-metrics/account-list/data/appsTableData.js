@@ -44,8 +44,8 @@ const appsTableData = (apps) => {
         name: [`${row.name}`, { checked: false }],
         id: row.id,
         status: row.status,
-        created: row.created,
-        modified: row.modified,
+        // created: row.created,
+        // modified: row.modified,
         action: <ActionCell id={row.id} handleChildren={handleChildren}/>,
       }
     ));
@@ -71,14 +71,14 @@ const data = {
     },
     { Header: "app id", accessor: "id" },
     { Header: "status", accessor: "status" },
-    { Header: "created", accessor: "created" },
-    { Header: "modified", accessor: "modified" },
+    // { Header: "created", accessor: "created" },
+    // { Header: "modified", accessor: "modified" },
     { Header: "action", accessor: "action" },
   ],
 };
 export default appsTableData;
 
-function ProductCell({ image, name, checked }) {
+const ProductCell = ({ image, name, checked }) => {
   return (
     <ArgonBox display="flex" alignItems="center">
       <Checkbox defaultChecked={checked} />

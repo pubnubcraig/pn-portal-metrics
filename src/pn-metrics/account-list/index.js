@@ -39,100 +39,46 @@ function AccountList() {
   const pnAccountContext = usePnAccountData();
   console.log('pnAccountContext', pnAccountContext);
 
-  useEffect(() => {
-  }, [pnAccountContext.portalAccounts])
-
-  useEffect(() => {
-  }, [pnAccountContext.portalApps])
-
-  useEffect(() => {
-  }, [pnAccountContext.portalKeys])
-
   const navigate = useNavigate();
 
   return (
     <>
-      <ArgonBox>
-        <Card>
-          <ArgonBox display="flex" justifyContent="space-between" alignItems="flex-start" p={3}>
-            <ArgonBox lineHeight={1}>
-              <ArgonTypography variant="h5" fontWeight="medium">
-                PubNub Accounts
-              </ArgonTypography>
-              {/* <ArgonTypography variant="button" fontWeight="regular" color="text">
-                A lightweight, extendable, dependency-free javascript HTML table plugin.
-              </ArgonTypography> */}
-            </ArgonBox>
-            <Stack spacing={1} direction="row">
-              {/* <Link to="/ecommerce/products/new-product">
-                <ArgonButton variant="gradient" color="info" size="small">
-                  + New Product
-                </ArgonButton>
-              </Link>
-              <ArgonButton variant="outlined" color="info" size="small">
-                Import
-              </ArgonButton>
-              <ArgonButton variant="outlined" color="info" size="small">
-                Export
-              </ArgonButton> */}
-            </Stack>
-          </ArgonBox>
-          <DataTable
-            table={dataTableData(pnAccountContext.portalAccounts)}
-            entriesPerPage={{
-              defaultValue: 5,
-              entries: [1, 5, 10, 20, 50],
-            }}
-            canSearch
-          />
-        </Card>
-      </ArgonBox>
+      <PnAssetTable
+        title="Accounts"
+        dataTable={dataTableData(pnAccountContext.portalAccounts)}
+      />
 
-      <ArgonBox my={3}>
-        <Card>
-          <ArgonBox display="flex" justifyContent="space-between" alignItems="flex-start" p={3}>
-            <ArgonBox lineHeight={1}>
-              <ArgonTypography variant="h5" fontWeight="medium">
-                Apps
-              </ArgonTypography>
-            </ArgonBox>
-            <Stack spacing={1} direction="row">
-            </Stack>
-          </ArgonBox>
-          <DataTable
-            table={appsTableData(pnAccountContext.portalApps)}
-            entriesPerPage={{
-              defaultValue: 5,
-              entries: [1, 5, 10, 20, 50],
-            }}
-            canSearch
-          />
-        </Card>
-      </ArgonBox>
-      
-      <ArgonBox my={3}>
-        <Card>
-          <ArgonBox display="flex" justifyContent="space-between" alignItems="flex-start" p={3}>
-            <ArgonBox lineHeight={1}>
-              <ArgonTypography variant="h5" fontWeight="medium">
-                Key Sets
-              </ArgonTypography>
-            </ArgonBox>
-            <Stack spacing={1} direction="row">
-            </Stack>
-          </ArgonBox>
-          <DataTable
-            table={keysTableData(pnAccountContext.portalKeys)}
-            entriesPerPage={{
-              defaultValue: 5,
-              entries: [1, 5, 10, 20, 50],
-            }}
-            canSearch
-          />
-        </Card>
-      </ArgonBox>
+      <PnAssetTable
+        title="Apps"
+        dataTable={appsTableData(pnAccountContext.portalApps)}
+      />
+
+      <PnAssetTable
+        title="Key Sets"
+        dataTable={keysTableData(pnAccountContext.portalKeys)}
+      />
     </>
   );
 }
 
 export default AccountList;
+
+
+const PnAssetTable = ({ title, dataTable }) => {
+  return (
+    <ArgonBox my={3}>
+      <Card>
+        <ArgonBox display="flex" justifyContent="space-between" alignItems="flex-start" p={3}>
+          <ArgonTypography variant="h5" fontWeight="medium">
+            {title}
+          </ArgonTypography>
+        </ArgonBox>
+        <DataTable
+          table={dataTable}
+          entriesPerPage={{ defaultValue: 5, entries: [1, 5, 10, 20, 50] }}
+          canSearch
+        />
+      </Card>
+    </ArgonBox>
+  );
+}

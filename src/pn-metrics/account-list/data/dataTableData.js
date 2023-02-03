@@ -42,10 +42,10 @@ const dataTableData = (accounts) => {
     const rows = accounts.map((row, index) => (
       {
         email: [`${row.email}`, { checked: false }],
-        company: row.properties.company,
-        company: row.id,
-        created: row.created,
-        modified: row.modified,
+        // company: row.properties.company,
+        id: row.id,
+        // created: row.created,
+        // modified: row.modified,
         action: <ActionCell id={row.id} handleChildren={handleChildren} />,
       }
     ));
@@ -69,10 +69,10 @@ const data = {
         <ProductCell  name={name} checked={data.checked} />
       ),
     },
-    { Header: "company", accessor: "company" },
+    // { Header: "company", accessor: "company" },
     { Header: "account id", accessor: "id" },
-    { Header: "created", accessor: "created" },
-    { Header: "modified", accessor: "modified" },
+    // { Header: "created", accessor: "created" },
+    // { Header: "modified", accessor: "modified" },
     { Header: "action", accessor: "action" },
   ],
   // rows : [{...}] // replaced actual dynamic data

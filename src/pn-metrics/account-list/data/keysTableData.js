@@ -41,11 +41,11 @@ const keysTableData = (keys) => {
   if (keys != null) {
     const rows = keys.map((row, index) => (
       {
-        name: [`${row.name}`, { checked: false }],
+        name: [`${row.properties.name}`, { checked: false }],
         id: row.id,
         status: row.status,
-        created: row.created,
-        modified: row.modified,
+        // created: row.created,
+        // modified: row.modified,
         action: <ActionCell id={row.id} handleChildren={handleChildren}/>,
       }
     ));
@@ -71,8 +71,8 @@ const data = {
     },
     { Header: "key id", accessor: "id" },
     { Header: "status", accessor: "status" },
-    { Header: "created", accessor: "created" },
-    { Header: "modified", accessor: "modified" },
+    // { Header: "created", accessor: "created" },
+    // { Header: "modified", accessor: "modified" },
     { Header: "action", accessor: "action" },
   ],
 };
