@@ -18,54 +18,374 @@ import { useState, useEffect } from "react";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
-import Icon from "@mui/material/Icon";
 
 // Argon Dashboard 2 PRO MUI components
 import ArgonBox from "components/ArgonBox";
-import ArgonTypography from "components/ArgonTypography";
-
-// Argon Dashboard 2 PRO MUI example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DetailedStatisticsCard from "examples/Cards/StatisticsCards/DetailedStatisticsCard";
-import SalesTable from "examples/Tables/SalesTable";
-import Table from "examples/Tables/Table";
-import CategoriesList from "examples/Lists/CategoriesList";
-import GradientLineChart from "examples/Charts/LineCharts/GradientLineChart";
-
-// Argon Dashboard 2 PRO MUI base styles
-import typography from "assets/theme/base/typography";
-
-// Dashboard layout components
-import Slider from "layouts/dashboards/default/components/Slider";
-import TeamMembers from "layouts/dashboards/default/components/TeamMembers";
-import TodoList from "layouts/dashboards/default/components/TodoList";
-import ProgressTrack from "layouts/dashboards/default/components/ProgressTrack";
-import BalanceCard from "layouts/dashboards/default/components/BalanceCard";
-import CryptoCard from "layouts/dashboards/default/components/CryptoCard";
-
-// Pages layout components
-import Post from "layouts/pages/profile/teams/components/Post";
-
-// Data
-import reportsBarChartData from "layouts/dashboards/default/data/reportsBarChartData";
-import gradientLineChartData from "layouts/dashboards/default/data/gradientLineChartData";
-import projectsTableData from "layouts/dashboards/default/data/projectsTableData";
-import salesTableData from "layouts/dashboards/default/data/salesTableData";
-import authorsTableData from "layouts/dashboards/default/data/authorsTableData";
-import categoriesListData from "layouts/dashboards/default/data/categoriesListData";
 
 import { usePnAccountData } from "PnAccountProvider";
 import AccountList from "pn-metrics/account-list";
+import ArgonSelect from "components/ArgonSelect";
+import TxApiList from "pn-metrics/tx-api-list";
 
 function PnCostDashboard() {
-  const { size } = typography;
   const pnAccountContext = usePnAccountData();
 
   useEffect(() => {
-
+    // what to do here???
   }, [pnAccountContext.portalAppId])
+
+  const [title, setTitle] = useState();
+
+  const handleTxTypeClick = (e, type) => {
+    e.preventDefault();
+    let txData = [];
+    let txRate = 0;
+    let heading = "API Breakdown - All Tx Types";
+    
+    if (type == "rep") {
+      heading = "API Breakdown - Replicated Tx Types";
+      txData = 
+      [
+        { 
+          "api": "publish",
+          "sum": pnAccountContext.usage.transaction_publish[
+            Object.keys(pnAccountContext.usage.transaction_publish)[0]].sum,
+            "rate": pnAccountContext.rateRep,
+          },
+        { 
+          "api": "grant",
+          "sum": pnAccountContext.usage.transaction_accessmanager_grants[
+            Object.keys(pnAccountContext.usage.transaction_accessmanager_grants)[0]].sum,
+          "rate": pnAccountContext.rateRep,
+        },
+      ]
+    }
+    else if (type == "edg"){
+      heading = "API Breakdown - Egde Tx Types";
+      txData = 
+      [
+        // { 
+        //   "api": "subscribe_all",
+        //   "sum": pnAccountContext.usage.[
+        //     Object.keys(pnAccountContext.usage.)[0]].sum,
+        //   "rate": pnAccountContext.rateEdg,
+        // },
+        { 
+          "api": "subscribe: init",
+          "sum": pnAccountContext.usage.transaction_subscribe_heartbeats[
+            Object.keys(pnAccountContext.usage.transaction_subscribe_heartbeats)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "subscribe: long poll expire",
+          "sum": pnAccountContext.usage.transaction_subscribe_timeouts[
+            Object.keys(pnAccountContext.usage.transaction_subscribe_timeouts)[0]].sum,
+            "rate": pnAccountContext.rateEdg,
+          },
+        { 
+          "api": "subscribe: client disconnect",
+          "sum": pnAccountContext.usage.transaction_subscribe_clientclosedconnection[
+            Object.keys(pnAccountContext.usage.transaction_subscribe_clientclosedconnection)[0]].sum,
+            "rate": pnAccountContext.rateEdg,
+          },
+        { 
+          "api": "subscribe: receive message",
+          "sum": pnAccountContext.usage.transaction_subscribe[
+            Object.keys(pnAccountContext.usage.transaction_subscribe)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "unauthorized: subscribe",
+          "sum": pnAccountContext.usage.transaction_subscribe_unauthorized[
+            Object.keys(pnAccountContext.usage.transaction_subscribe_unauthorized)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "subscribe: receive signal",
+          "sum": pnAccountContext.usage.transaction_subscribe_signal[
+            Object.keys(pnAccountContext.usage.transaction_subscribe_signal)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "subscribe: receive object event",
+          "sum": pnAccountContext.usage.transaction_subscribe_objects[
+            Object.keys(pnAccountContext.usage.transaction_subscribe_objects)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "subscribe: receive files",
+          "sum": pnAccountContext.usage.transaction_subscribe_files[
+            Object.keys(pnAccountContext.usage.transaction_subscribe_files)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "channel group: list channels",
+          "sum": pnAccountContext.usage.transaction_streamcontroller_reads[
+            Object.keys(pnAccountContext.usage.transaction_streamcontroller_reads)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "client error: channel group",
+          "sum": pnAccountContext.usage.transaction_streamcontroller_clienterrors[
+            Object.keys(pnAccountContext.usage.transaction_streamcontroller_clienterrors)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "unauthorized: signal",
+          "sum": pnAccountContext.usage.transaction_signal_unauthorized[
+            Object.keys(pnAccountContext.usage.transaction_signal_unauthorized)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "client error: signal",
+          "sum": pnAccountContext.usage.transaction_signal_clienterrors[
+            Object.keys(pnAccountContext.usage.transaction_signal_clienterrors)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "push: list devices",
+          "sum": pnAccountContext.usage.transaction_push_device_reads[
+            Object.keys(pnAccountContext.usage.transaction_push_device_reads)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "client error: push",
+          "sum": pnAccountContext.usage.transaction_push_device_clienterrors[
+            Object.keys(pnAccountContext.usage.transaction_push_device_clienterrors)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "unauthorized: publish",
+          "sum": pnAccountContext.usage.transaction_publish_unauthorized[
+            Object.keys(pnAccountContext.usage.transaction_publish_unauthorized)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "client error: publish",
+          "sum": pnAccountContext.usage.transaction_publish_clienterrors[
+            Object.keys(pnAccountContext.usage.transaction_publish_clienterrors)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "presence: where now",
+          "sum": pnAccountContext.usage.transaction_presence_wherenow[
+            Object.keys(pnAccountContext.usage.transaction_presence_wherenow)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "presence: client leave",
+          "sum": pnAccountContext.usage.transaction_presence_leave[
+            Object.keys(pnAccountContext.usage.transaction_presence_leave)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "presence: global here now",
+          "sum": pnAccountContext.usage.transaction_presence_herenow_global[
+            Object.keys(pnAccountContext.usage.transaction_presence_herenow_global)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "presence: here now",
+          "sum": pnAccountContext.usage.transaction_presence_herenow[
+            Object.keys(pnAccountContext.usage.transaction_presence_herenow)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "presence: explicit heartbeat",
+          "sum": pnAccountContext.usage.transaction_presence_heartbeats[
+            Object.keys(pnAccountContext.usage.transaction_presence_heartbeats)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "presence: get state",
+          "sum": pnAccountContext.usage.transaction_presence_getuserstate[
+            Object.keys(pnAccountContext.usage.transaction_presence_getuserstate)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "client error: presence",
+          "sum": pnAccountContext.usage.transaction_presence_clienterrors[
+            Object.keys(pnAccountContext.usage.transaction_presence_clienterrors)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "unauthorized: objects",
+          "sum": pnAccountContext.usage.transaction_objects_unauthorized[
+            Object.keys(pnAccountContext.usage.transaction_objects_unauthorized)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "objects: read",
+          "sum": pnAccountContext.usage.transaction_objects_reads[
+            Object.keys(pnAccountContext.usage.transaction_objects_reads)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "objects: get user",
+          "sum": pnAccountContext.usage.transaction_objects_get_user[
+            Object.keys(pnAccountContext.usage.transaction_objects_get_user)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "objects: get space",
+          "sum": pnAccountContext.usage.transaction_objects_get_space[
+            Object.keys(pnAccountContext.usage.transaction_objects_get_space)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "objects: get space membership",
+          "sum": pnAccountContext.usage.transaction_objects_get_space_user_memberships[
+            Object.keys(pnAccountContext.usage.transaction_objects_get_space_user_memberships)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "objects: get all spaces",
+          "sum": pnAccountContext.usage.transaction_objects_get_all_spaces[
+            Object.keys(pnAccountContext.usage.transaction_objects_get_all_spaces)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "client error: objects",
+          "sum": pnAccountContext.usage.transaction_objects_clienterrors[
+            Object.keys(pnAccountContext.usage.transaction_objects_clienterrors)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "objects: get all users",
+          "sum": pnAccountContext.usage.transaction_objects_get_all_users[
+            Object.keys(pnAccountContext.usage.transaction_objects_get_all_users)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "message actions: fetch",
+          "sum": pnAccountContext.usage.transaction_message_actions_get[
+            Object.keys(pnAccountContext.usage.transaction_message_actions_get)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "subscribe: message action",
+          "sum": pnAccountContext.usage.transaction_message_actions_subscribe[
+            Object.keys(pnAccountContext.usage.transaction_message_actions_subscribe)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "unauthorized: message actions",
+          "sum": pnAccountContext.usage.transaction_message_actions_unauthorized[
+            Object.keys(pnAccountContext.usage.transaction_message_actions_unauthorized)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "client error: message actions",
+          "sum": pnAccountContext.usage.transaction_message_actions_clienterrors[
+            Object.keys(pnAccountContext.usage.transaction_message_actions_clienterrors)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "history: fetch messages",
+          "sum": pnAccountContext.usage.transaction_history[
+            Object.keys(pnAccountContext.usage.transaction_history)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "history: message count",
+          "sum": pnAccountContext.usage.transaction_history_messages_count[
+            Object.keys(pnAccountContext.usage.transaction_history_messages_count)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "history: fetch with message actions",
+          "sum": pnAccountContext.usage.transaction_history_with_actions[
+            Object.keys(pnAccountContext.usage.transaction_history_with_actions)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "unauthorized: fetch history with message actions",
+          "sum": pnAccountContext.usage.transaction_history_with_actions_unauthorized[
+            Object.keys(pnAccountContext.usage.transaction_history_with_actions_unauthorized)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "push: apns sent",
+          "sum": pnAccountContext.usage.transaction_apns_sent[
+            Object.keys(pnAccountContext.usage.transaction_apns_sent)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "push: fcm sent",
+          "sum": pnAccountContext.usage.transaction_fcm_sent[
+            Object.keys(pnAccountContext.usage.transaction_fcm_sent)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "client error: files",
+          "sum": pnAccountContext.usage.transaction_files_clienterrors[
+            Object.keys(pnAccountContext.usage.transaction_files_clienterrors)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "unauthorized: files",
+          "sum": pnAccountContext.usage.transaction_files_unauthorized[
+            Object.keys(pnAccountContext.usage.transaction_files_unauthorized)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "files: delete",
+          "sum": pnAccountContext.usage.transaction_files_delete_file[
+            Object.keys(pnAccountContext.usage.transaction_files_delete_file)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "files: generate url",
+          "sum": pnAccountContext.usage.transaction_files_generate_url[
+            Object.keys(pnAccountContext.usage.transaction_files_generate_url)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "files: get all files",
+          "sum": pnAccountContext.usage.transaction_files_get_all_files[
+            Object.keys(pnAccountContext.usage.transaction_files_get_all_files)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "files: get file",
+          "sum": pnAccountContext.usage.transaction_files_get_file[
+            Object.keys(pnAccountContext.usage.transaction_files_get_file)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "client error: fire",
+          "sum": pnAccountContext.usage.transaction_fire_client[
+            Object.keys(pnAccountContext.usage.transaction_fire_client)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "fire: message",
+          "sum": pnAccountContext.usage.transaction_fire[
+            Object.keys(pnAccountContext.usage.transaction_fire)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "access manager: audit (deprecated)",
+          "sum": pnAccountContext.usage.transaction_accessmanager_audits[
+            Object.keys(pnAccountContext.usage.transaction_accessmanager_audits)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+        { 
+          "api": "client error: access manager",
+          "sum": pnAccountContext.usage.transaction_accessmanager_clienterrors[
+            Object.keys(pnAccountContext.usage.transaction_accessmanager_clienterrors)[0]].sum,
+          "rate": pnAccountContext.rateEdg,
+        },
+      ]
+    }
+
+    setTitle(heading);
+    pnAccountContext.setTxApiData(txData);
+  }
 
   return (
     <DashboardLayout>
@@ -74,108 +394,34 @@ function PnCostDashboard() {
         <ArgonBox display="flex" alignItems="top" >
           <Grid container item={12}>
             <Grid item md={2}>
-              <BreakdownType pnAccountContext={pnAccountContext} />
+              <BreakdownType 
+                pnAccountContext={pnAccountContext} 
+                handleTxTypeClick={handleTxTypeClick} 
+              />
             </Grid>
             <Grid item md={10} my={3}>
-              <SalesTable title="Sales by Country" rows={salesTableData} />
+              <ArgonBox mb={3} lineHeight={2} display="" >
+                <ArgonSelect
+                  defaultValue={{ value: "p30", label: "Past 30 Days" }}
+                  options={[
+                    {"value":"mtd", "label": "Month to Date"}, 
+                    {"value":"Last Month", "label": "Last Month"},
+                    {"value":"p30", "label": "Past 30 Days"}, 
+                  ]}
+                  // defaultValue={{ value: options[0].id, label: options[0].email }}
+                  // options={options.map((entry) => ({ value: entry.id, label: entry.email }))}
+                  // onChange={(e) => handleSelectAccount(e)}
+                  size="large" 
+                />
+              </ArgonBox>
+              
+              <TxApiList title={title} data={pnAccountContext.txApiData}/>
             </Grid>
           </Grid>
         </ArgonBox>
 
-        {/* 
-        <Grid container spacing={3} mb={3}>
-          <Grid item xs={12} lg={7}>
-            <GradientLineChart
-              title="PubNub Sales"
-              description={
-                <ArgonBox display="flex" alignItems="center">
-                  <ArgonBox fontSize={size.lg} color="success" mb={0.3} mr={0.5} lineHeight={0}>
-                    <Icon sx={{ fontWeight: "bold" }}>arrow_upward</Icon>
-                  </ArgonBox>
-                  <ArgonTypography variant="button" color="text" fontWeight="medium">
-                    4% more{" "}
-                    <ArgonTypography variant="button" color="text" fontWeight="regular">
-                      in 2022
-                    </ArgonTypography>
-                  </ArgonTypography>
-                </ArgonBox>
-              }
-              chart={gradientLineChartData}
-            />
-          </Grid>
-          <Grid item xs={12} lg={5}>
-            <Slider />
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} mb={3}>
-          <Grid item xs={12} md={6} lg={4}>
-            <TeamMembers />
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <TodoList />
-          </Grid>
-          <Grid item xs={12} md={6} lg={4}>
-            <ProgressTrack />
-          </Grid>
-        </Grid>
-        <Grid container spacing={3} mb={3}>
-          <Grid item xs={12} lg={5}>
-            <Post />
-          </Grid>
-          <Grid container item xs={12} lg={7} spacing={3}>
-            <Grid item xs={12} height="max-content">
-              <ArgonBox
-                sx={{
-                  "& .MuiTableContainer-root": {
-                    p: 3,
-                  },
-                  "& .MuiTableRow-root:not(:last-child)": {
-                    "& td": {
-                      borderBottom: ({ borders: { borderWidth, borderColor } }) =>
-                        `${borderWidth[1]} solid ${borderColor}`,
-                    },
-                  },
-                }}
-              >
-                <Table columns={projectsTableData.columns} rows={projectsTableData.rows} />
-              </ArgonBox>
-            </Grid>
-            <Grid container item xs={12} spacing={3}>
-              <Grid item xs={12} md={6}>
-                <BalanceCard />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <CryptoCard />
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <SalesTable title="Sales by Country" rows={salesTableData} />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <ArgonBox
-              sx={{
-                "& .MuiTableRow-root:not(:last-child)": {
-                  "& td": {
-                    borderBottom: ({ borders: { borderWidth, borderColor } }) =>
-                      `${borderWidth[1]} solid ${borderColor}`,
-                  },
-                },
-              }}
-            >
-              <Table columns={authorsTableData.columns} rows={authorsTableData.rows} />
-            </ArgonBox>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <CategoriesList title="categories" categories={categoriesListData} />
-          </Grid>
-        </Grid> */}
-
-
-
         <AccountList />
+
       </ArgonBox>
       <Footer />
     </DashboardLayout>
@@ -184,10 +430,29 @@ function PnCostDashboard() {
 
 export default PnCostDashboard;
 
-const BreakdownType = ({ pnAccountContext }) => {
+const BreakdownType = ({ pnAccountContext, handleTxTypeClick }) => {
   return (
     <>
       <ArgonBox my={3}>
+        <Grid item md={12}>
+          <ArgonBox lineHeight={2} display="inline-block">
+            {/* <ArgonTypography component="label" variant="caption" fontWeight="bold">
+              Color
+            </ArgonTypography> */}
+            <ArgonSelect
+              defaultValue={{ value: "tx", label: "Tx Types" }}
+              options={[{"value":"tx", "label": "Tx Types"}, {"value":"ft", "label": "Features"}]}
+              // defaultValue={{ value: options[0].id, label: options[0].email }}
+              // options={options.map((entry) => ({ value: entry.id, label: entry.email }))}
+              // onChange={(e) => handleSelectAccount(e)}
+              size="large"
+            />
+          </ArgonBox>
+        </Grid>
+      </ArgonBox>
+      <ArgonBox my={3}
+        onClick={(e) => handleTxTypeClick(e, "tot")}
+      >
         <Grid item mr={2}>
           <DetailedStatisticsCard
             title="Total"
@@ -198,7 +463,9 @@ const BreakdownType = ({ pnAccountContext }) => {
         </Grid>
       </ArgonBox>
 
-      <ArgonBox my={3}>
+      <ArgonBox my={3}
+        onClick={(e) => handleTxTypeClick(e, "rep")}
+      >
         <Grid item mr={2}>
           <DetailedStatisticsCard
             title="Replicated"
@@ -209,19 +476,36 @@ const BreakdownType = ({ pnAccountContext }) => {
         </Grid>
       </ArgonBox>
 
-      <ArgonBox my={3}>
+      <ArgonBox my={3}
+        onClick={(e) => handleTxTypeClick(e, "edg")}
+      >
         <Grid item mr={2}>
           <DetailedStatisticsCard
             title="Edge"
             count={pnAccountContext.costEdg}
             icon={{ color: "success", component: <i className="ni ni-paper-diploma" /> }}
-            percentage={{ color: "error", count: pnAccountContext.txEdg, text: "" }}
+            percentage={{ color: "success", count: pnAccountContext.txEdg, text: "" }}
+          />
+        </Grid>
+      </ArgonBox>
+
+      <ArgonBox my={3}
+        onClick={(e) => handleTxTypeClick(e, "sig")}
+      >
+        <Grid item mr={2}>
+          <DetailedStatisticsCard
+            title="Signals"
+            count={pnAccountContext.costSig}
+            icon={{ color: "warning", component: <i className="ni ni-cart" /> }}
+            percentage={{ color: "success", count: pnAccountContext.txSig, text: "" }}
           />
         </Grid>
       </ArgonBox>
 
       {/* 
-          <ArgonBox my={3}>
+        <ArgonBox my={3}
+          onClick={(e) => handleTxTypeClick(e, "fun")}
+        >
             <Grid item mr={2}>
               <DetailedStatisticsCard
                 title="Functions"
@@ -232,17 +516,6 @@ const BreakdownType = ({ pnAccountContext }) => {
             </Grid> 
           </ArgonBox>
           */}
-
-      <ArgonBox my={3}>
-        <Grid item mr={2}>
-          <DetailedStatisticsCard
-            title="Signals"
-            count={pnAccountContext.costSig}
-            icon={{ color: "warning", component: <i className="ni ni-cart" /> }}
-            percentage={{ color: "success", count: pnAccountContext.txSig, text: "" }}
-          />
-        </Grid>
-      </ArgonBox>
     </>
   );
 }

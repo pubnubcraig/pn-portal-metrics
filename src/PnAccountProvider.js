@@ -186,6 +186,8 @@ export const PnAccountProvider = ({ children }) => {
     const [costFun, setCostFun] = useState(0.00);
     const [costSig, setCostSig] = useState(0.00);
 
+    const [txApiData, setTxApiData] = useState([]);
+
     const [txTot, setTxTot] = useState(0);
     const [txRep, setTxRep] = useState(0);
     const [txEdg, setTxEdg] = useState(0);
@@ -206,7 +208,7 @@ export const PnAccountProvider = ({ children }) => {
         portalKeyId, setPortalKeyId,
         keySetName, setKeySetName,
         subKey, setSubKey,
-        
+
         rateRep, setRateRep,
         rateEdg, setRateEdg,
         rateFun, setRateFun,
@@ -218,6 +220,8 @@ export const PnAccountProvider = ({ children }) => {
         costEdg, setCostEdg,
         costFun, setCostFun,
         costSig, setCostSig,
+
+        txApiData, setTxApiData,
 
         txTot, setTxTot,
         txRep, setTxRep,

@@ -25,43 +25,46 @@ import ArgonTypography from "components/ArgonTypography";
 import DataTable from "examples/Tables/DataTable";
 
 // Data
-import dataTableData from "./data/dataTableData";
-import appsTableData from "./data/appsTableData";
-import keysTableData from "./data/keysTableData";
+import txTableData from "./data/txTableData";
 import { usePnAccountData } from "PnAccountProvider";
 
-function AccountList() {
-  const pnAccountContext = usePnAccountData();
-  console.log('pnAccountContext', pnAccountContext);
+function TxApiList({title, txRate, data}) {
+  // const pnAccountContext = usePnAccountData();
+  console.log('TxApiList: txApiData', title, txRate, data);
 
   useEffect(() => {
-    // what to do here to prevent refresh of selected data on scroll and clicks
-  }, [pnAccountContext.portalAppId])
+    // what to do here 
+  }, [data])
 
   return (
     <>
-      <PnAssetTable
-        title="Accounts"
-        dataTable={dataTableData(pnAccountContext.portalAccounts)}
-      />
+      {/* <TxApiCostTable
+        title={title}
+        dataTable={txTableData(data, txRate)}
+      /> */}
 
-      <PnAssetTable
-        title="Apps"
-        dataTable={appsTableData(pnAccountContext.portalApps)}
-      />
-
-      <PnAssetTable
-        title="Key Sets"
-        dataTable={keysTableData(pnAccountContext.portalKeys)}
-      />
+      <ArgonBox my={3}>
+        <Card>
+          <ArgonBox display="flex" justifyContent="space-between" alignItems="flex-start" p={3}>
+            <ArgonTypography variant="h5" fontWeight="medium">
+              {title}
+            </ArgonTypography>
+          </ArgonBox>
+          <DataTable
+            table={txTableData(data, txRate)}
+            entriesPerPage={{ defaultValue: 5, entries: [1, 5, 10, 20, 50] }}
+            canSearch
+          />
+        </Card>
+      </ArgonBox>
     </>
   );
 }
 
-export default AccountList;
+export default TxApiList;
 
 
-const PnAssetTable = ({ title, dataTable }) => {
+const TxApiCostTable = ({ title, dataTable }) => {
   return (
     <ArgonBox my={3}>
       <Card>
