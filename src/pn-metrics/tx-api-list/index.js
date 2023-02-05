@@ -38,11 +38,6 @@ function TxApiList({title, txRate, data}) {
 
   return (
     <>
-      {/* <TxApiCostTable
-        title={title}
-        dataTable={txTableData(data, txRate)}
-      /> */}
-
       <ArgonBox my={3}>
         <Card>
           <ArgonBox display="flex" justifyContent="space-between" alignItems="flex-start" p={3}>
@@ -62,23 +57,3 @@ function TxApiList({title, txRate, data}) {
 }
 
 export default TxApiList;
-
-
-const TxApiCostTable = ({ title, dataTable }) => {
-  return (
-    <ArgonBox my={3}>
-      <Card>
-        <ArgonBox display="flex" justifyContent="space-between" alignItems="flex-start" p={3}>
-          <ArgonTypography variant="h5" fontWeight="medium">
-            {title}
-          </ArgonTypography>
-        </ArgonBox>
-        <DataTable
-          table={dataTable}
-          entriesPerPage={{ defaultValue: 5, entries: [1, 5, 10, 20, 50] }}
-          canSearch
-        />
-      </Card>
-    </ArgonBox>
-  );
-}

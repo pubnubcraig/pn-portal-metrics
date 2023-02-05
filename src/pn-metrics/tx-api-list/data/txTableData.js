@@ -23,7 +23,7 @@ const txTableData = (data, txRate) => {
     const rows = data.map((row, index) => (
       {
         api: row.api, 
-        sum: row.sum.toLocaleString(),
+        sum: (row.sum.toLocaleString()),
         cost: (row.sum * row.rate).toLocaleString(
           undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
       } 
