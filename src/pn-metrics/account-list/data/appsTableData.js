@@ -41,6 +41,7 @@ const appsTableData = (apps) => {
   if (apps != null) {
     const rows = apps.map((row, index) => (
       {
+        key: row.index,
         name: [`${row.name}`, { checked: false }],
         id: row.id,
         status: row.status,

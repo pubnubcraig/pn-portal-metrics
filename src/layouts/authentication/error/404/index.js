@@ -59,7 +59,7 @@ function Error404() {
         minHeight="100vh"
         sx={{
           display: "grid",
-          placeItems: "center",
+          placeitems: "center",
           backgroundImage: `url(${bgImage})`,
           backgroundSize: "cover",
           backgroundPosition: "50%",

@@ -40,6 +40,7 @@ const dataTableData = (accounts) => {
   if (accounts != null) {
     const rows = accounts.map((row, index) => (
       {
+        key: row.index,
         email: [`${row.email}`, { checked: false }],
         // company: row.properties.company,
         id: row.id,

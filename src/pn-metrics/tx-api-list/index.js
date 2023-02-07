@@ -26,11 +26,10 @@ import DataTable from "examples/Tables/DataTable";
 
 // Data
 import txTableData from "./data/txTableData";
-import { usePnAccountData } from "PnAccountProvider";
 
 function TxApiList({title, txRate, data}) {
   // const pnAccountContext = usePnAccountData();
-  console.log('TxApiList: txApiData', title, txRate, data);
+  console.log('TxApiList:', title, txRate, data);
 
   useEffect(() => {
     // what to do here 
@@ -46,7 +45,7 @@ function TxApiList({title, txRate, data}) {
             </ArgonTypography>
           </ArgonBox>
           <DataTable
-            table={txTableData(data, txRate)}
+            table={txTableData(txRate, data)}
             entriesPerPage={{ defaultValue: 5, entries: [1, 5, 10, 20, 50] }}
             canSearch
           />

@@ -3,6 +3,7 @@ const request = require('request');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const cors = require('cors');
+const dayjs = require('dayjs');
 
 const app = express();
 app.use(cors({ origin: '*' }));
@@ -15,17 +16,23 @@ app.get('/test', (req, res) => {
 }); 
 
 app.get('/key-usage', (req, res) => {
-  console.log("in get /key-usage");
+  console.log("in get /key-usage", req.query.start, req.query.end);
 
   // curl --request GET 'https://admin.pubnub.com/api/v4/services/usage/legacy/usage?key_id=<key_id>&usageType=<usage_type>&file_format=json&start=<start_data>&end=<end_date>' \
   // --header 'X-Session-Token: <session_token>'
 
+  const start = req.query.start === undefined || req.query.start === null || req.query.start == "" || req.query.start == "undefined"
+    ? (dayjs().subtract(7, "day").format("YYYY-MM-DD")) : req.query.start;
+
+  const end = req.query.end === undefined || req.query.end === null || req.query.end == "" || req.query.start == "undefined"
+    ? (dayjs().format("YYYY-MM-DD")) : req.query.end;
+
   const options = {
-    'url': `https://admin.pubnub.com/api/v4/services/usage/legacy/usage?key_id=${req.query.keyid}&usageType=transaction&file_format=json&start=2022-11-01&end=2022-11-30`,
+    'url': `https://admin.pubnub.com/api/v4/services/usage/legacy/usage?key_id=${req.query.keyid}&usageType=transaction&file_format=json&start=${start}&end=${end}`,
     'headers': { 'X-Session-Token': req.query.token } 
   };
 
-  console.log("key-usage options:", options);
+  console.log(">>> key-usage url:", options);
 
   request.get(options, (err1, res1, body1) => {
     if (err1) {
@@ -33,7 +40,7 @@ app.get('/key-usage', (req, res) => {
     }
 
     let data = JSON.parse(res1.body);
-    console.log("key-usage", data);
+    console.log("key-usage", Object.keys(data).length);
     res.send(data);
   });
 });

@@ -60,7 +60,7 @@ function Error500() {
         minHeight="100vh"
         sx={{
           display: "grid",
-          placeItems: "center",
+          placeitems: "center",
           backgroundImage: ({ functions: { linearGradient, rgba }, palette: { gradients } }) =>
             `${linearGradient(
               rgba(gradients.warning.main, 0.4),

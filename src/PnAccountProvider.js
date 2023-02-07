@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useRef, useState } from 'react'
 
 const Context = createContext();
 
@@ -13,7 +13,7 @@ const hideAlert = () => {
 export const PnAccountProvider = ({ children }) => {
     const handleSelectAccount = (val) => {
         console.log("handleSelectAccount: ", val);
-        setPortalAccountId(val);
+        portalAccountId.current = val;
     
         // clear Apps list
         setPortalApps([]);
@@ -21,13 +21,13 @@ export const PnAccountProvider = ({ children }) => {
         fetchApps(val);
     };
     
-    const fetchApps = (id) => {
+    const fetchApps = () => {
         console.log("fetchApps");
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
         timerAlert("Fetching your apps", "Please wait, while we fetch your apps...", 5000);
     
-        let uri = `/apps?ownerid=${id}&token=${portalToken}`;
+        let uri = `/apps?ownerid=${portalAccountId.current}&token=${portalToken.current}`;
         console.log(`uri: ${uri}`);
     
         fetch(uri, {signal: controller.signal}).then(res => res.json()).then((result) => {
@@ -51,20 +51,20 @@ export const PnAccountProvider = ({ children }) => {
     
     const handleSelectApp = (val) => {
         console.log("handleSelectApp: ", val);
-        setPortalAppId(val);
+        portalAppId.current = val;
     
         // clear Apps list
         setPortalKeys([]);
         fetchKeys(val);
     };
     
-    const fetchKeys = (id) => {
+    const fetchKeys = () => {
         console.log("fetchKeys");
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
         timerAlert("Fetching your keys", "Please wait, while we fetch your keys...", 5000);
     
-        let uri = `/keys?appid=${id}&token=${portalToken}`;
+        let uri = `/keys?appid=${portalAppId.current}&token=${portalToken.current}`;
         console.log(`uri: ${uri}`);
     
         fetch(uri, {signal: controller.signal}).then(res => res.json()).then((result) => {
@@ -88,8 +88,8 @@ export const PnAccountProvider = ({ children }) => {
     
     const handleSelectKey = (val) => {
         console.log("handleSelectKey: ", val);
-        setPortalKeyId(val);
-        fetchKeyUsage(val);
+        portalKeyId.current = val;
+        fetchKeyUsage();
     };
     
     const fetchKeyUsage = (id) => {
@@ -98,12 +98,13 @@ export const PnAccountProvider = ({ children }) => {
         const timeoutId = setTimeout(() => controller.abort(), 5000);
         timerAlert("Fetching your keys", "Please wait, while we fetch your keys...", 5000);
     
-        let uri = `/key-usage?keyid=${id}&token=${portalToken}`;
+        let uri = `/key-usage?keyid=${portalKeyId.current}&token=${portalToken.current}&start=${startDate.current}&end=${endDate.current}`;
         console.log(`uri: ${uri}`);
     
         fetch(uri, {signal: controller.signal}).then(res => res.json()).then((result) => {
             console.log("key usage results", result);
-            setUsage(result);
+            usage.current = result;
+            updateCosts();
             
             clearTimeout(timeoutId);
             hideAlert();
@@ -119,58 +120,76 @@ export const PnAccountProvider = ({ children }) => {
                 timerAlert("fetch /keys", error, 5000);
             };
     }
+
+    const sumMetrics = (metric) => {
+        console.log("sumMetrics", metric);
+        const keys = Object.keys(metric);
+        console.log("keys", keys);
+
+        let sum = 0;
+
+        keys.forEach((key, index) => {
+            console.log(`${key}: ${metric[key].sum}`);
+            sum = sum + metric[key].sum;
+        });
+
+        return sum;
+    }
     
     const updateCosts = () => {
-        if (portalKeys.length == 0) return;
+        console.log("updateCosts:", groupMetricsBy.current, startDate.current, endDate.current, usage.current);
+        if (portalKeys.length == 0 || usage === null) return;
     
-        const totSum = usage.transactions_total[Object.keys(usage.transactions_total)[0]].sum;
-        const repSum = usage.replicated[Object.keys(usage.replicated)[0]].sum;
-        const edgSum = usage.edge[Object.keys(usage.edge)[0]].sum;
-        // const funSum = usage.edge[Object.keys(usage.functions)[0]].sum;
-        const sigSum = usage.signals[Object.keys(usage.signals)[0]].sum;
+        const totSum = sumMetrics(usage.current.transactions_total);
+        const repSum = sumMetrics(usage.current.replicated);
+        const edgSum = sumMetrics(usage.current.edge);
+        const sigSum = sumMetrics(usage.current.signals);
+        const funSum = sumMetrics(usage.current.executions);
+        const maSum = sumMetrics(usage.current.message_actions);
     
         const repCost = repSum * rateRep;
         const edgCost = edgSum * rateEdg;
-        // const funCost = funSum * rateFun;
+        const funCost = funSum * rateFun;
         const sigCost = sigSum * rateSig;
-        const totCost = repCost + edgCost + sigCost;
-        // const totCost = repCost + edgCost + funCost + sigCost + totCost;
+        const maCost  = maSum *  rateMa;
+        const totCost = repCost + edgCost + funCost + sigCost + maCost;
     
+        setTxRep(repSum.toLocaleString());
         setCostRep(repCost.toLocaleString(
             undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
     
-        setTxRep(repSum.toLocaleString());
-    
-        setCostEdg(edgCost.toLocaleString(
-        undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));  
-    
         setTxEdg(edgSum.toLocaleString());
-    
-        // setCostFun(funCost.toLocaleString(
-        //   undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    
-        // setTxFun(funSum.toLocaleString());
-    
+        setCostEdg(edgCost.toLocaleString(
+            undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));  
+        
+        setTxSig(sigSum.toLocaleString());
         setCostSig(sigCost.toLocaleString(
             undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));  
     
-        setTxSig(sigSum.toLocaleString());
-    
-        setCostTot(totCost.toLocaleString(
-        undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    
+        setTxFun(funSum.toLocaleString());
+        setCostFun(funCost.toLocaleString(
+          undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+
+        setTxMa(maSum.toLocaleString());
+        setCostMa(maCost.toLocaleString(
+            undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+  
         setTxTot(totSum.toLocaleString());
+        setCostTot(totCost.toLocaleString(
+            undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));    
     }
 
-    const [portalUsername, setPortalUsername] = useState();
-    const [portalToken, setPortalToken] = useState();
-    const [portalUserId, setPortalUserId] = useState();
-    const [portalAccountId, setPortalAccountId] = useState();
+    const portalUsername = useRef();
+    const portalToken = useRef();
+    const portalUserId = useRef();
+    const portalAccountId = useRef();
+    const portalAppId = useRef();
+    const portalKeyId = useRef();
+    const usage = useRef();
+
     const [portalAccounts, setPortalAccounts] = useState([]);
     const [portalApps, setPortalApps] = useState([]);
-    const [portalAppId, setPortalAppId] = useState([]);
     const [portalKeys, setPortalKeys] = useState([]);
-    const [portalKeyId, setPortalKeyId] = useState([]);
     const [keySetName, setKeySetName] = useState();
     const [subKey, setSubKey] = useState("");
 
@@ -178,13 +197,19 @@ export const PnAccountProvider = ({ children }) => {
     const [rateEdg, setRateEdg] = useState(0.000020);
     const [rateFun, setRateFun] = useState(0.000025);
     const [rateSig, setRateSig] = useState(0.000005);
+    const [rateMa, setRateMa] = useState(0.000015);
 
-    const [usage, setUsage] = useState(0);
+    // tx (transaction type) or ft (feature)
+    const groupMetricsBy = useRef("tx");
+    const startDate = useRef();
+    const endDate = useRef();
+
     const [costTot, setCostTot] = useState(0.00);
     const [costRep, setCostRep] = useState(0.00);
     const [costEdg, setCostEdg] = useState(0.00);
     const [costFun, setCostFun] = useState(0.00);
     const [costSig, setCostSig] = useState(0.00);
+    const [costMa, setCostMa] = useState(0.00);
 
     const [txApiData, setTxApiData] = useState([]);
 
@@ -193,19 +218,20 @@ export const PnAccountProvider = ({ children }) => {
     const [txEdg, setTxEdg] = useState(0);
     const [txFun, setTxFun] = useState(0);
     const [txSig, setTxSig] = useState(0);
+    const [txMa, setTxMa] = useState(0);
 
     const pnAccountData = {
         handleSelectAccount, handleSelectApp, handleSelectKey,
         fetchKeyUsage, updateCosts,
-        portalUsername, setPortalUsername,
-        portalToken, setPortalToken,
-        portalUserId, setPortalUserId,
-        portalAccountId, setPortalAccountId,
+        portalUsername,
+        portalToken,
+        portalUserId,
+        portalAccountId,
         portalAccounts, setPortalAccounts,
         portalApps, setPortalApps,
-        portalAppId, setPortalAppId,
+        portalAppId,
         portalKeys, setPortalKeys,
-        portalKeyId, setPortalKeyId,
+        portalKeyId,
         keySetName, setKeySetName,
         subKey, setSubKey,
 
@@ -213,13 +239,19 @@ export const PnAccountProvider = ({ children }) => {
         rateEdg, setRateEdg,
         rateFun, setRateFun,
         rateSig, setRateSig,
+        rateMa, setRateMa,
 
-        usage, setUsage,
+        groupMetricsBy,
+        startDate,
+        endDate,
+
+        usage,
         costTot, setCostTot,
         costRep, setCostRep,
         costEdg, setCostEdg,
         costFun, setCostFun,
         costSig, setCostSig,
+        costMa, setCostMa,
 
         txApiData, setTxApiData,
 
@@ -228,6 +260,7 @@ export const PnAccountProvider = ({ children }) => {
         txEdg, setTxEdg,
         txFun, setTxFun,
         txSig, setTxSig,
+        txMa, setTxMa,
     }
 
     return <Context.Provider value={pnAccountData}> {children} </Context.Provider>

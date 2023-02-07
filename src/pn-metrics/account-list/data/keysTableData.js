@@ -41,6 +41,7 @@ const keysTableData = (keys) => {
   if (keys != null) {
     const rows = keys.map((row, index) => (
       {
+        key: row.index,
         name: [`${row.properties.name}`, { checked: false }],
         id: row.id,
         status: row.status,

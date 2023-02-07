@@ -81,9 +81,9 @@ function Basic() {
         (result) => {
             console.log("result", result);
 
-            pnAccountContext.setPortalToken(result.session.token);
-            pnAccountContext.setPortalUserId(result.session.userid);
-            pnAccountContext.setPortalAccountId(result.session.accountid);
+            pnAccountContext.portalToken.current = result.session.token;
+            pnAccountContext.portalUserId.current = result.session.userid;
+            pnAccountContext.portalAccountId.current = result.session.accountid;
             pnAccountContext.setPortalAccounts(result.accounts);
 
             clearTimeout(timeoutId);

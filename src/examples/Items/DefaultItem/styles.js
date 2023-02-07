@@ -8,7 +8,7 @@ function defaultItemIconBox(theme, ownerState) {
 
   return {
     display: "grid",
-    placeItems: "center",
+    placeitems: "center",
     width: pxToRem(48),
     height: pxToRem(48),
     borderRadius: borderRadius.md,

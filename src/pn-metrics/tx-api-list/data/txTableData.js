@@ -15,16 +15,29 @@ Coded by www.creative-tim.com
 
 import { usePnAccountData } from "PnAccountProvider";
 
-const txTableData = (data, txRate) => {
-  console.log("in txTableData", data)
+const txTableData = (txRate, data) => {
+  console.log("in txTableData", txRate, data);
   const pnAccountContext = usePnAccountData();
+
+  const sumMetric = (metric) => {
+    const keys = Object.keys(pnAccountContext.usage.current[metric]);
+
+    let sum = 0;
+    keys.forEach((key, index) => {
+        sum = sum + pnAccountContext.usage.current[metric][key].sum;
+    });
+
+    return sum;
+  }
 
   if (data != null) {
     const rows = data.map((row, index) => (
       {
-        api: row.api, 
-        sum: (row.sum.toLocaleString()),
-        cost: (row.sum * row.rate).toLocaleString(
+        key: row.metric,
+        feature: row.feature,
+        action: row.action,
+        sum: (sumMetric(row.metric)).toLocaleString(),
+        cost: (sumMetric(row.metric) * txRate).toLocaleString(
           undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
       } 
     ));
@@ -40,11 +53,11 @@ const txTableData = (data, txRate) => {
 
 const tableColumns = {
   columns: [
-    { Header: "api", accessor: "api"},
+    { Header: "feature", accessor: "feature"},
+    { Header: "action", accessor: "action"},
     { Header: "tx sum", accessor: "sum", align: "right" },
     { Header: "cost", accessor: "cost", align: "right"  },
   ],
-  // rows : [{...}] // replaced actual dynamic data
 };
 
 export default txTableData;

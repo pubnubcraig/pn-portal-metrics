@@ -92,9 +92,12 @@ function DashboardNavbar({ absolute, light, isMini }) {
     return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
 
-  useEffect(() => {
-    pnAccountContext.updateCosts();
-  }, [pnAccountContext.usage])
+  // useEffect(() => {
+  //   pnAccountContext.updateCosts();
+  // }, 
+  // // [pnAccountContext.portalKeyId.current, pnAccountContext.groupMetricsBy, 
+  // //     pnAccountContext.startDate, pnAccountContext.endDate]
+  // );
 
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
@@ -196,18 +199,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
           mb={{ xs: 1, md: 0 }}
           sx={(theme) => navbarRow(theme, { isMini })}
         >
-          {/* <AccountsDropdown
-            options={pnAccountContext.portalAccounts} 
-            handleSelectAccount={handleSelectAccount}
-          />
-          <AppsDropdown
-            options={pnAccountContext.portalApps} 
-            handleSelectApp={handleSelectApp}
-          />
-          <KeysDropdown 
-            options={pnAccountContext.portalKeys} 
-            handleSelectKey={handleSelectKey}
-          /> */}
         </ArgonBox>
       </Toolbar>
     </AppBar>
@@ -230,55 +221,3 @@ DashboardNavbar.propTypes = {
 };
 
 export default DashboardNavbar;
-
-// const AccountsDropdown = ({options, handleSelectAccount}) => {
-//   console.log("AccountsDropdown: accounts", options);
-//   console.log("Array.isArray", Array.isArray(options));
-
-//   if (options == null || options.length ===0) return <><h2>No Options</h2></>;
-
-//   return (
-//     <>
-//       <ArgonSelect
-//         defaultValue={{ value: options[0].id, label: options[0].email }}
-//         options={options.map((entry) => ({ value: entry.id, label: entry.email }))}
-//         onChange={(e) => handleSelectAccount(e)}
-//         size="small"
-//       />
-//     </>
-//   );
-// }
-
-// const AppsDropdown = ({options, handleSelectApp}) => {
-//   console.log("AppsDropdown: apps", options);
-
-//   if (options == null || options.length ===0) return <><h2>No Options</h2></>;
-
-//   return (
-//     <>
-//       <ArgonSelect
-//         // defaultValue={{ value: "craig@pubnub.com", label: "craig@pubnub.com" }}
-//         options={options.map((entry) => ({ value: entry.id, label: entry.name }))}
-//         onChange={(e) => handleSelectApp(e)}
-//         size="small"
-//       />
-//     </>
-//   );
-// }
-
-// const KeysDropdown = ({options, handleSelectKey}) => {
-//   console.log("KeysDropdown: keys", options);
-
-//   if (options == null || options.length === 0) return <><h2>No Options</h2></>;
-
-//   return (
-//     <>
-//       <ArgonSelect
-//         // defaultValue={{ value: "craig@pubnub.com", label: "craig@pubnub.com" }}
-//         options={options.map((entry) => ({ value: entry.id, label: entry.properties.name + ": " + entry.subscribe_key }))}
-//         onChange={(e) => handleSelectKey(e)}
-//         size="small"
-//       />
-//     </>
-//   );
-// }
